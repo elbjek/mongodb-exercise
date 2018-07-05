@@ -17,7 +17,7 @@ app.listen('3000',()=>{
 });
 
 app.get('/', (req,res)=>{
-    res.send("Hello, go to /users")
+    res.send("Hello, go to /users to see all users")
 });
 
 
@@ -27,52 +27,50 @@ app.post('/index', (req,res)=>{
         res.send(result)
     });
 });
+
 function pushNewData(callback){
     const userInfo = db.collection('users');
     userInfo.insertMany([
     {
-        'username':'Krystal.Anise',
+        'username':'Krystal Anise',
         'password':'missnothing',
         'email':'krystal.anise@gmail.com'
     },{
         'username':'Luanne Charla',
-        'password':'watermaloon',
+        'password':'watermaloon365',
         'email':'luanne.charla@gmail.com'
     },{
         'username':'Natalee Rikki',
-        'password':'winstonsilverslim2468',
+        'password':'cul8rm8',
         'email':'natalee.rikki@hotmail.com'
     },{
         'username':'Floretta Roxana',
-        'password':'winstonsilverslim2468',
+        'password':'roxyfloxy225',
         'email':'flo_roxxxana@yahoo.com'
     }
 ], callback)
 }
 
-app.get('/users',(req,res)=>{
+app.get('/users', (req, res) => {
 
-    getUsers({},function(err,result){
+    getUsers({}, function(err, result) {
         if (err) throw err;
-        var usernames = '';
-        for(let i=0; i< result.length; i+=1){
-             usernames+= result[i].username + ', ' + 'User ID:    ' + result[i]._id +'</br>';
-        }
-        res.send('Search users by their userID </br> </br>'+'Users are: </br> </br> '+ usernames );
+        var usernames = ""
+        result.forEach((user) => {
+            usernames += user.username + ', ' + 'User ID:    ' + user._id + '</br>';
+        });res.send('Search users by their userID </br> </br>' + 'Users are: </br> </br> ' + usernames)
     })
 
 })
 app.get('/users/:id',(req,res)=>{
     getUsers({'_id': new mongo.ObjectID(req.params.id)},
         function(err,result){
-            var singleUser=''
             if(err) throw err;
-            for(let i=0; i< result.length; i+=1){
-                res.send('User: ' + result[i].username + '</br>' +
-                         'Password: ' + result[i].password + '</br>' +
-                         'Email: ' + result[i].email
-            )}
-        }
+            res.send(
+                'User: ' + result[0].username + '</br>' + 
+                'Password: ' + result[0].password + '</br>' + 
+                'Email:' + result[0].email)
+            }
     )
 
 })
@@ -80,10 +78,6 @@ app.get('/users/:id',(req,res)=>{
 function getUsers(arg,callback){
     const userInfo = db.collection('users');
     userInfo.find(arg).toArray(callback);
-
 }
 
-function parseID(){
-    
-}
 
